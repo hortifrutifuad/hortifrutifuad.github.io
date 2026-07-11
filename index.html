@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hortifruti Fuad - Pirituba, Lapa e Freguesia do Ó</title>
+    <meta name="description" content="Frutas, legumes e verduras frescas todos os dias. Entregamos em Pirituba, Lapa e Freguesia do Ó. Atendimento especial para creches, escolas e restaurantes.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="glass-header">
+        <div class="container header-content">
+            <h1 class="logo">🍎 Hortifruti <span>Fuad</span></h1>
+            <nav>
+                <a href="#vitrine">Nossos Produtos</a>
+                <a href="#b2b">Para Empresas</a>
+                <a href="#pedido" class="btn-primary">Fazer Pedido</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="hero-overlay"></div>
+            <div class="container hero-content">
+                <h2>O frescor da fazenda, direto para a sua mesa.</h2>
+                <p>Selecionamos as melhores frutas e hortaliças todos os dias. Entrega rápida na Lapa, Pirituba e Freguesia do Ó.</p>
+                <a href="#pedido" class="btn-large">Quero Produtos Frescos</a>
+            </div>
+        </section>
+
+        <section id="vitrine" class="container">
+            <h3 class="section-title">Nossa Vitrine</h3>
+            <div class="grid-produtos">
+                <div class="card-produto">
+                    <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=600&auto=format&fit=crop" alt="Frutas Frescas">
+                    <div class="card-info">
+                        <h4>Frutas Selecionadas</h4>
+                        <p>Maçãs, bananas, uvas, morangos e frutas da estação, sempre docinhas.</p>
+                    </div>
+                </div>
+                <div class="card-produto">
+                    <img src="https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?q=80&w=600&auto=format&fit=crop" alt="Legumes e Verduras">
+                    <div class="card-info">
+                        <h4>Verduras e Legumes</h4>
+                        <p>Alface crocante, tomates vermelhinhos, brócolis e tudo para sua salada perfeita.</p>
+                    </div>
+                </div>
+                <div class="card-produto">
+                    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=600&auto=format&fit=crop" alt="Temperos">
+                    <div class="card-info">
+                        <h4>Temperos e Ovos</h4>
+                        <p>Ovos caipiras, cheiro-verde, alho, cebola e especiarias para dar sabor à sua comida.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="b2b">
+            <div class="container b2b-content glass-panel">
+                <div class="b2b-text">
+                    <span class="badge">Atendimento B2B</span>
+                    <h3>Abastecemos Creches, Escolas e Restaurantes</h3>
+                    <p>Sabemos que qualidade e constância são fundamentais para o seu negócio. Temos planos de fornecimento recorrente com condições especiais.</p>
+                    <ul>
+                        <li>✔️ Tabela de preços diferenciada (Atacado)</li>
+                        <li>✔️ Entregas agendadas (Diárias ou Semanais)</li>
+                        <li>✔️ Pedido Mínimo: R$ 150,00</li>
+                    </ul>
+                </div>
+                <div class="b2b-cta">
+                    <p>Quer ser nosso parceiro?</p>
+                    <a href="https://wa.me/5511999999999?text=Olá,%20sou%20uma%20empresa/instituição%20e%20gostaria%20de%20saber%20sobre%20fornecimento." target="_blank" class="btn-whatsapp">Falar com Consultor</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="pedido" class="container">
+            <div class="pedido-box">
+                <h3 class="section-title">Simule sua Entrega</h3>
+                <p class="subtitle">Verifique as condições de entrega para o seu bairro ou escolha retirar na loja.</p>
+                <div class="alerta-horario">
+                    <p>⏰ <strong>Regra de Entregas:</strong> Pedidos até 12:00 são entregues no final da tarde. Após as 12:00, entrega no dia seguinte (sujeito a disponibilidade).</p>
+                </div>
+                
+                <div class="calculadora-frete">
+                    <label for="bairro">Selecione sua Região ou Retirada:</label>
+                    <select id="bairro">
+                        <option value="none">-- Escolha uma opção --</option>
+                        <option value="retirada">🚶 Retirar na Loja (Grátis)</option>
+                        <option value="pirituba">🛵 Pirituba</option>
+                        <option value="freguesia">🛵 Freguesia do Ó</option>
+                        <option value="lapa">🛵 Lapa</option>
+                        <option value="zonanorte">🛵 Zona Norte (Outros bairros)</option>
+                        <option value="outros">🛵 Outras Regiões</option>
+                    </select>
+
+                    <div id="resultado-frete" class="hidden">
+                        <!-- Preenchido pelo JS -->
+                    </div>
+
+                    <button id="btn-pedir-whatsapp" class="btn-whatsapp hidden">Continuar Pedido no WhatsApp</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Hortifruti Fuad. Todos os direitos reservados.</p>
+            <p>Siga-nos nas redes sociais para ofertas diárias!</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
