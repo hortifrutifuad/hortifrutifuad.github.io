@@ -1,0 +1,21 @@
+# --- Dependências e Pastas de Build ---
+node_modules/
+.next/
+dist/
+build/
+out/
+.cache/
+
+# --- Mídias e Assets Binários ---
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.mp4
+*.zip
+*.tar.gz
+
+# --- Logs e Banco de Dados ---
+*.log
+*.sql

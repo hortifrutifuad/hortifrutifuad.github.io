@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const boxResultado = document.getElementById('resultado-frete');
     const btnWhatsapp = document.getElementById('btn-pedir-whatsapp');
 
+    // Se os elementos da calculadora de frete não estiverem na página, encerra a execução
+    if (!selectBairro) return;
+
     // Tabela de fretes simulada (Lógica de Negócio)
     const regrasFrete = {
         'retirada': {
