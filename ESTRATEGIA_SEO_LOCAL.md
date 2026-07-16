@@ -1,10 +1,10 @@
-# 📈 Estratégia de SEO Local & Ranqueamento — Hortifruti Fuad
+# Estratégia de SEO Local & Ranqueamento — Hortifruti Fuad
 
 Este documento serve como guia estratégico para posicionar a ficha do **Hortifruti Fuad** nas primeiras posições do Google Maps e buscas locais do Google (3-Pack local), atraindo tráfego orgânico e gerando leads a custo zero.
 
 ---
 
-## 🎯 Os 3 Pilares do Algoritmo do Google Maps
+## Os 3 Pilares do Algoritmo do Google Maps
 
 O Google decide a ordem dos resultados de busca local com base em:
 1. **Relevância:** O quão bem a sua ficha corresponde à intenção de pesquisa do usuário.
@@ -13,7 +13,7 @@ O Google decide a ordem dos resultados de busca local com base em:
 
 ---
 
-## 🛠️ Otimizações Práticas na Ficha do Google
+## Otimizações Práticas na Ficha do Google
 
 ### 1. Categoria Principal e Secundárias
 *   **Categoria Principal:** `Loja de frutas e verduras` ou `Quitanda` (garanta que está definido exatamente assim).
@@ -34,7 +34,7 @@ O Google lê o conteúdo do nosso site (`index.html`), cruza com a ficha e enten
 
 ---
 
-## 💬 Gestão de Avaliações (O Fator de Maior Peso)
+## Gestão de Avaliações (O Fator de Maior Peso)
 
 As avaliações de clientes não servem apenas para reputação; elas alimentam o algoritmo.
 
@@ -45,7 +45,7 @@ As avaliações de clientes não servem apenas para reputação; elas alimentam 
 
 ---
 
-## 📷 Gestão de Imagens na Ficha (Como mudar a capa)
+## Gestão de Imagens na Ficha (Como mudar a capa)
 
 O Google decide qual imagem será exibida como foto de capa baseando-se no engajamento dos usuários, resolução e formato. No entanto, você pode e deve definir a sua preferência.
 
