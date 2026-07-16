@@ -44,7 +44,7 @@ Desenvolvemos uma arquitetura **100% gratuita de hospedagem**, unindo posicionam
 - [x] **Fase 1: Landing Page e Vitrine Dinâmica**
   - [x] Estrutura HTML5 semântica e otimizada (`index.html`).
   - [x] Design "Boutique Clean" e responsivo utilizando CSS Vanilla (`styles.css`).
-  - [x] Criação de guias e estratégias (`GUIA_GOOGLE_MEU_NEGOCIO.md`, `estrategia_hortifruti_notebooklm.md`).
+  - [x] Criação de guias e estratégias (`GUIA_GOOGLE_MEU_NEGOCIO.md`, `estrategia_hortifruti_notebooklm.md`, `ESTRATEGIA_SEO_LOCAL.md`).
   - [x] Criação da branch `dev` para testes de novas implementações.
   - [x] Desativação temporária da calculadora de frete e links diretos do WhatsApp (`index.html` e `script.js`).
   - [x] Criação do diretório de imagens locais `images/` para futuras fotos proprietárias.
