@@ -46,7 +46,6 @@ Desenvolvemos uma arquitetura **100% gratuita de hospedagem**, unindo posicionam
 
 ### A Fazer (To Do)
 - [ ] **Fase 2: Expansão de Conteúdo e Identidade Visual**
-  - [ ] Substituir as imagens temporárias por fotos proprietárias na pasta `images/`.
   - [ ] Implementar a seção de receitas saudáveis, dicas de alimentação e receitas de sucos naturais no site.
 - [ ] **Fase 3: SEO Local e Lançamento**
   - [ ] Configuração do perfil e preenchimento de metadados focados no Google Meu Negócio / Maps.
@@ -58,6 +57,8 @@ Desenvolvemos uma arquitetura **100% gratuita de hospedagem**, unindo posicionam
 - [ ] Ajustes finos de responsividade e usabilidade no site estático.
 
 ### Concluído (Done)
+- [x] **Fase 2: Expansão de Conteúdo e Identidade Visual**
+  - [x] Substituir as imagens temporárias por fotos proprietárias na pasta `images/` (processamento automático de SEO com Python).
 - [x] **Fase 1: Landing Page e Vitrine Dinâmica**
   - [x] Estrutura HTML5 semântica e otimizada (`index.html`).
   - [x] Design "Boutique Clean" e responsivo utilizando CSS Vanilla (`styles.css`).
