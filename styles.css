@@ -338,6 +338,83 @@ nav a:hover {
 }
 
 /* =========================================
+   Localização
+========================================= */
+#localizacao {
+    padding: 80px 20px;
+}
+
+.localizacao-content {
+    display: flex;
+    align-items: stretch;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.mapa-wrapper {
+    flex: 1 1 60%;
+    min-height: 350px;
+}
+
+.mapa-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    border: 0;
+    display: block;
+}
+
+.localizacao-info {
+    flex: 1 1 40%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+}
+
+.localizacao-info h4 {
+    font-size: 1.6rem;
+    color: var(--primary-dark);
+}
+
+.localizacao-info a:not(.btn-primary) {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.localizacao-info a.btn-primary {
+    align-self: flex-start;
+    margin-top: 10px;
+}
+
+/* =========================================
+   WhatsApp Flutuante
+========================================= */
+.whatsapp-float {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 60px;
+    height: 60px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    z-index: 1001;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+}
+
+/* =========================================
    Footer
 ========================================= */
 footer {
@@ -345,6 +422,15 @@ footer {
     color: var(--white);
     text-align: center;
     padding: 40px 20px;
+}
+
+footer a {
+    color: var(--white);
+    font-weight: 600;
+}
+
+footer p {
+    margin-top: 8px;
 }
 
 /* =========================================
@@ -368,5 +454,20 @@ footer {
     }
     .b2b-text ul li {
         text-align: left;
+    }
+    .localizacao-content {
+        flex-direction: column;
+    }
+    .mapa-wrapper {
+        min-height: 250px;
+    }
+    .mapa-wrapper iframe {
+        min-height: 250px;
+    }
+    .whatsapp-float {
+        width: 52px;
+        height: 52px;
+        right: 16px;
+        bottom: 16px;
     }
 }
