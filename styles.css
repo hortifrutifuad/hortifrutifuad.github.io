@@ -299,7 +299,7 @@ nav a:hover {
     color: var(--text-dark);
 }
 
-.calculadora-frete select {
+.calculadora-frete input[type="text"] {
     width: 100%;
     padding: 15px;
     border: 2px solid #e0e0e0;
@@ -310,8 +310,76 @@ nav a:hover {
     transition: border-color 0.3s;
 }
 
-.calculadora-frete select:focus {
+.calculadora-frete input[type="text"]:focus {
     border-color: var(--primary-color);
+}
+
+.modo-pedido {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn-modo {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: var(--white);
+    font-size: 1rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.btn-modo:hover {
+    border-color: var(--primary-color);
+}
+
+.btn-modo.ativo {
+    border-color: var(--primary-color);
+    background-color: #f4fbf6;
+    color: var(--primary-dark);
+}
+
+.cep-busca {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.cep-busca input {
+    flex: 1;
+}
+
+.cep-busca button {
+    flex-shrink: 0;
+    padding: 15px 20px;
+}
+
+#cep-status {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+.cep-status-aviso {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.cep-status-erro {
+    background-color: #fdecea;
+    color: #b3261e;
+}
+
+.aviso-taxa-a-parte {
+    font-size: 0.85rem;
+    color: var(--text-dark);
+    opacity: 0.75;
+    margin-top: 10px;
 }
 
 .alerta-horario {

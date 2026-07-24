@@ -19,6 +19,7 @@
             <h1 class="logo">🍎 Hortifruti <span>Fuad</span></h1>
             <nav>
                 <a href="#vitrine">Nossos Produtos</a>
+                <a href="#pedido">Simular Entrega</a>
                 <a href="#localizacao">Onde Estamos</a>
                 <a href="https://wa.me/5511992697948?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20um%20pedido%20no%20Hortifruti%20Fuad." target="_blank" rel="noopener">Peça pelo WhatsApp</a>
             </nav>
@@ -81,26 +82,28 @@
             </div>
         </section>
 
-        <!-- Calculadora de entrega e WhatsApp desativados temporariamente
         <section id="pedido" class="container">
             <div class="pedido-box">
                 <h3 class="section-title">Simule sua Entrega</h3>
                 <p class="subtitle">Verifique as condições de entrega para o seu bairro ou escolha retirar na loja.</p>
                 <div class="alerta-horario">
-                    <p>⏰ <strong>Regra de Entregas:</strong> Pedidos até 12:00 são entregues no final da tarde. Após as 12:00, entrega no dia seguinte (sujeito a disponibilidade).</p>
+                    <p>⏰ <strong>Regra de Entregas:</strong> Pedidos até 12:00 são entregues no final da tarde. Após as 12:00, entrega no dia seguinte (sujeito a disponibilidade). Pedido mínimo para entrega: <strong>R$ 150,00</strong> (taxa de entrega cobrada à parte).</p>
                 </div>
-                
+
                 <div class="calculadora-frete">
-                    <label for="bairro">Selecione sua Região ou Retirada:</label>
-                    <select id="bairro">
-                        <option value="none">-- Escolha uma opção --</option>
-                        <option value="retirada">🚶 Retirar na Loja (Grátis)</option>
-                        <option value="pirituba">🛵 Pirituba</option>
-                        <option value="freguesia">🛵 Freguesia do Ó</option>
-                        <option value="lapa">🛵 Lapa</option>
-                        <option value="zonanorte">🛵 Zona Norte (Outros bairros)</option>
-                        <option value="outros">🛵 Outras Regiões</option>
-                    </select>
+                    <div class="modo-pedido">
+                        <button type="button" id="btn-modo-retirada" class="btn-modo">🚶 Retirar na Loja</button>
+                        <button type="button" id="btn-modo-entrega" class="btn-modo">🛵 Receber em Casa</button>
+                    </div>
+
+                    <div id="bloco-cep" class="hidden">
+                        <label for="cep">Digite seu CEP:</label>
+                        <div class="cep-busca">
+                            <input type="text" id="cep" inputmode="numeric" placeholder="00000-000" maxlength="9">
+                            <button id="btn-verificar-cep" type="button" class="btn-primary">Calcular</button>
+                        </div>
+                        <p id="cep-status" class="hidden"></p>
+                    </div>
 
                     <div id="resultado-frete" class="hidden">
                     </div>
@@ -109,7 +112,6 @@
                 </div>
             </div>
         </section>
-        -->
 
         <section id="localizacao" class="container">
             <h3 class="section-title">Onde Estamos</h3>
