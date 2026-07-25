@@ -44,6 +44,9 @@ Desenvolvemos uma arquitetura **100% gratuita de hospedagem**, unindo posicionam
 
 ## Status do Projeto (Kanban / Checklist)
 
+> Visão de fases. O backlog operacional — decisões de frete, pendências e
+> armadilhas conhecidas — fica em [`BACKLOG.md`](BACKLOG.md).
+
 ### A Fazer (To Do)
 - [ ] **Fase 2: Expansão de Conteúdo e Identidade Visual**
   - [ ] Implementar a seção de receitas saudáveis, dicas de alimentação e receitas de sucos naturais no site.
@@ -57,6 +60,11 @@ Desenvolvemos uma arquitetura **100% gratuita de hospedagem**, unindo posicionam
 - [ ] Ajustes finos de responsividade e usabilidade no site estático.
 
 ### Concluído (Done)
+- [x] **Logística e Entrega**
+  - [x] Simulador de frete por CEP com cálculo de distância até a loja.
+  - [x] Tabela de frete própria: R$ 10 até 2 km, + R$ 1,50/km, raio de 5 km.
+  - [x] Tela dedicada para endereços fora do raio (WhatsApp, motoboy por conta ou retirada).
+  - [x] Pedido mínimo de entrega reduzido para R$ 100,00.
 - [x] **Fase 2: Expansão de Conteúdo e Identidade Visual**
   - [x] Substituir as imagens temporárias por fotos proprietárias na pasta `images/` (processamento automático de SEO com Python).
 - [x] **Fase 1: Landing Page e Vitrine Dinâmica**
@@ -64,5 +72,5 @@ Desenvolvemos uma arquitetura **100% gratuita de hospedagem**, unindo posicionam
   - [x] Design "Boutique Clean" e responsivo utilizando CSS Vanilla (`styles.css`).
   - [x] Criação de guias e estratégias (`GUIA_GOOGLE_MEU_NEGOCIO.md`, `estrategia_hortifruti_notebooklm.md`, `ESTRATEGIA_SEO_LOCAL.md`).
   - [x] Criação da branch `dev` para testes de novas implementações.
-  - [x] Desativação temporária da calculadora de frete e links diretos do WhatsApp (`index.html` e `script.js`).
+  - [x] ~~Desativação temporária da calculadora de frete e links diretos do WhatsApp~~ — reativados e em produção.
   - [x] Criação do diretório de imagens locais `images/` para futuras fotos proprietárias.
