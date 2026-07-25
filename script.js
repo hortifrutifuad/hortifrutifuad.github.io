@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const FATOR_CORRECAO_ROTA = 1.3;   // aproxima a distância em linha reta da distância real de rua
     const VELOCIDADE_MEDIA_KMH = 20;   // velocidade média urbana, usada só para estimar o tempo
     const TEMPO_DESPACHO_MIN = 10;     // minutos extras estimados para aceite/preparo do motoboy
-    const PEDIDO_MINIMO_ENTREGA = 150; // toda entrega paga esse mínimo, à parte da taxa
+    const PEDIDO_MINIMO_ENTREGA = 100; // toda entrega paga esse mínimo, à parte da taxa
     const DISTANCIA_MAXIMA_KM = 5;     // raio de entrega da loja; fora dele, combinamos no WhatsApp
     const TIMEOUT_API_MS = 7000;
 
