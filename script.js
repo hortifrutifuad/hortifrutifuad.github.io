@@ -15,18 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const LOJA_LAT = -23.4808927;
     const LOJA_LNG = -46.7080163;
 
-    // --- Parâmetros de precificação -----------------------------------------------------
-    // Não temos frota própria: toda entrega é feita chamando um motoboy avulso (Uber Flash).
-    // Os valores abaixo são uma ESTIMATIVA para dar uma ideia de preço ao cliente antes de
-    // pedir. AJUSTAR estes dois valores com base em cotações reais do Uber Flash na região.
-    const TARIFA_BASE = 8;             // R$ - custo fixo de acionar o motoboy
-    const VALOR_POR_KM = 2;            // R$ por km estimado
+    // --- Tabela de frete da loja ---------------------------------------------------------
+    // Não temos frota própria: chamamos um motoboy avulso (Uber Flash / 99 Entregas). O preço
+    // deles varia com horário e demanda, mas o cliente paga a TABELA FIXA abaixo — a diferença
+    // fica com a loja. Por isso o valor por km excedente precisa cobrir o custo real do app.
+    const TAXA_RAIO_BASE = 10;         // R$ - qualquer entrega dentro do raio base
+    const RAIO_BASE_KM = 2;            // km cobertos pela taxa fixa
+    const VALOR_POR_KM_EXCEDENTE = 1.5; // R$ por km acima do raio base
     // ------------------------------------------------------------------------------------
     const FATOR_CORRECAO_ROTA = 1.3;   // aproxima a distância em linha reta da distância real de rua
     const VELOCIDADE_MEDIA_KMH = 20;   // velocidade média urbana, usada só para estimar o tempo
     const TEMPO_DESPACHO_MIN = 10;     // minutos extras estimados para aceite/preparo do motoboy
     const PEDIDO_MINIMO_ENTREGA = 150; // toda entrega paga esse mínimo, à parte da taxa
-    const DISTANCIA_MAXIMA_KM = 15;    // acima disso, tratamos manualmente via WhatsApp
+    const DISTANCIA_MAXIMA_KM = 5;     // raio de entrega da loja; fora dele, combinamos no WhatsApp
+    const TIMEOUT_API_MS = 7000;
 
     const numeroLoja = '5511992697948';
 
@@ -44,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
             Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
+    }
+
+    function escaparHtml(texto) {
+        const elemento = document.createElement('span');
+        elemento.textContent = texto;
+        return elemento.innerHTML;
     }
 
     function formatarReais(valor) {
@@ -91,6 +99,25 @@ document.addEventListener('DOMContentLoaded', () => {
         limparStatusCep();
     }
 
+    // Endereço válido, porém longe: não é falha de cálculo, é fora da área de cobertura.
+    function mostrarForaDoRaio(distanciaEstimada) {
+        mostrarStatusCep(
+            `Seu endereço fica a aprox. ${distanciaEstimada.toFixed(1)} km da loja.`,
+            'aviso'
+        );
+        boxResultado.innerHTML = `
+            <h4>Fora do nosso raio de entrega</h4>
+            <p>Entregamos até ${DISTANCIA_MAXIMA_KM} km da loja. Para o seu endereço, dá para
+            combinar pelo WhatsApp: você pode chamar o motoboy por conta (Uber Flash, 99 Entregas)
+            ou retirar direto na loja, sem taxa e sem pedido mínimo.</p>
+        `;
+        boxResultado.classList.remove('hidden');
+        abrirWhatsapp(
+            `Olá! Meu endereço fica a aprox. ${distanciaEstimada.toFixed(1)} km da loja, fora do raio de ` +
+            `entrega. Podemos combinar como fazer?`
+        );
+    }
+
     function mostrarFallbackManual(mensagemStatus) {
         mostrarStatusCep(mensagemStatus, 'aviso');
         boxResultado.innerHTML = `
@@ -102,13 +129,92 @@ document.addEventListener('DOMContentLoaded', () => {
         abrirWhatsapp('Olá! Gostaria de saber o valor da entrega para o meu endereço.');
     }
 
-    async function geocodificarCep(cepLimpo) {
-        const resposta = await fetch(
-            `https://nominatim.openstreetmap.org/search?postalcode=${cepLimpo}&country=Brazil&format=json&limit=1`
+    // Aborta a chamada se a API demorar demais, para o botão não ficar travado em "Calculando..."
+    async function buscarJson(url) {
+        const controle = new AbortController();
+        const timer = setTimeout(() => controle.abort(), TIMEOUT_API_MS);
+        try {
+            const resposta = await fetch(url, { signal: controle.signal });
+            if (!resposta.ok) return null;
+            return await resposta.json();
+        } catch (erro) {
+            return null;
+        } finally {
+            clearTimeout(timer);
+        }
+    }
+
+    // Fonte principal: devolve o CEP já com latitude/longitude do logradouro.
+    // Em CEP geral de cidade (sem rua nem bairro) o retorno é o centro do município,
+    // então marcamos a precisão como 'cidade' para não passar confiança demais ao cliente.
+    async function localizarPorCepGeo(cepLimpo) {
+        const dados = await buscarJson(`https://cep.awesomeapi.com.br/json/${cepLimpo}`);
+        if (!dados || dados.code || !dados.lat || !dados.lng) return null;
+        return {
+            lat: parseFloat(dados.lat),
+            lng: parseFloat(dados.lng),
+            bairro: dados.district || '',
+            cidade: dados.city || '',
+            precisao: dados.address || dados.district ? 'rua' : 'cidade'
+        };
+    }
+
+    async function buscarEnderecoViaCep(cepLimpo) {
+        const dados = await buscarJson(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+        if (!dados || dados.erro) return null;
+        return {
+            logradouro: dados.logradouro || '',
+            bairro: dados.bairro || '',
+            cidade: dados.localidade || '',
+            uf: dados.uf || ''
+        };
+    }
+
+    async function geocodificarNominatim(parametros) {
+        const dados = await buscarJson(
+            `https://nominatim.openstreetmap.org/search?${parametros}&format=json&limit=1`
         );
-        const dados = await resposta.json();
-        if (!dados || !dados.length) return null;
+        if (!Array.isArray(dados) || !dados.length) return null;
         return { lat: parseFloat(dados[0].lat), lng: parseFloat(dados[0].lon) };
+    }
+
+    // O Nominatim quase não indexa CEP brasileiro, então buscamos pelo endereço que o CEP
+    // representa: primeiro a rua, e se ela não existir no mapa, o bairro.
+    async function geocodificarEndereco(endereco) {
+        if (!endereco.cidade) return null;
+
+        if (endereco.logradouro) {
+            const params = new URLSearchParams({
+                street: endereco.logradouro,
+                city: endereco.cidade,
+                state: endereco.uf,
+                country: 'Brazil'
+            });
+            const coords = await geocodificarNominatim(params.toString());
+            if (coords) {
+                return { ...coords, bairro: endereco.bairro, cidade: endereco.cidade, precisao: 'rua' };
+            }
+        }
+
+        if (endereco.bairro) {
+            const busca = `${endereco.bairro}, ${endereco.cidade}, ${endereco.uf}, Brasil`;
+            const coords = await geocodificarNominatim(`q=${encodeURIComponent(busca)}`);
+            if (coords) {
+                return { ...coords, bairro: endereco.bairro, cidade: endereco.cidade, precisao: 'bairro' };
+            }
+        }
+
+        return null;
+    }
+
+    async function localizarCep(cepLimpo) {
+        const porCepGeo = await localizarPorCepGeo(cepLimpo);
+        if (porCepGeo) return porCepGeo;
+
+        const endereco = await buscarEnderecoViaCep(cepLimpo);
+        if (!endereco) return { erro: 'cep-inexistente' };
+
+        return (await geocodificarEndereco(endereco)) || { erro: 'sem-coordenadas' };
     }
 
     async function verificarCep() {
@@ -124,31 +230,26 @@ document.addEventListener('DOMContentLoaded', () => {
         btnVerificarCep.textContent = 'Calculando...';
 
         try {
-            const respostaViaCep = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-            const enderecoViaCep = await respostaViaCep.json();
-
-            if (enderecoViaCep.erro) {
-                mostrarFallbackManual('CEP não encontrado. Vamos confirmar o valor da entrega direto no WhatsApp.');
-                return;
-            }
-
-            const coordenadas = await geocodificarCep(cepLimpo);
-            if (!coordenadas) {
-                mostrarFallbackManual('Não conseguimos localizar esse CEP no mapa automaticamente.');
-                return;
-            }
-
-            const distanciaReta = distanciaHaversineKm(LOJA_LAT, LOJA_LNG, coordenadas.lat, coordenadas.lng);
-            const distanciaEstimada = distanciaReta * FATOR_CORRECAO_ROTA;
-
-            if (distanciaEstimada > DISTANCIA_MAXIMA_KM) {
+            const local = await localizarCep(cepLimpo);
+            if (local.erro) {
                 mostrarFallbackManual(
-                    `Seu endereço fica a aprox. ${distanciaEstimada.toFixed(1)} km, fora do nosso raio automático. Vamos confirmar a entrega no WhatsApp.`
+                    local.erro === 'cep-inexistente'
+                        ? 'CEP não encontrado. Confira os números ou fale com a gente no WhatsApp.'
+                        : 'Não conseguimos localizar esse CEP no mapa. Vamos confirmar a entrega no WhatsApp.'
                 );
                 return;
             }
 
-            const taxaEstimada = TARIFA_BASE + VALOR_POR_KM * distanciaEstimada;
+            const distanciaReta = distanciaHaversineKm(LOJA_LAT, LOJA_LNG, local.lat, local.lng);
+            const distanciaEstimada = distanciaReta * FATOR_CORRECAO_ROTA;
+
+            if (distanciaEstimada > DISTANCIA_MAXIMA_KM) {
+                mostrarForaDoRaio(distanciaEstimada);
+                return;
+            }
+
+            const kmExcedente = Math.max(0, distanciaEstimada - RAIO_BASE_KM);
+            const taxaEstimada = TAXA_RAIO_BASE + VALOR_POR_KM_EXCEDENTE * kmExcedente;
             const tempoEstimadoMin = Math.round((distanciaEstimada / VELOCIDADE_MEDIA_KMH) * 60) + TEMPO_DESPACHO_MIN;
 
             const agora = new Date();
@@ -158,23 +259,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     : 'Entrega amanhã (sujeito à disponibilidade).';
 
             const cepFormatado = `${cepLimpo.slice(0, 5)}-${cepLimpo.slice(5)}`;
-            const enderecoTexto = `${enderecoViaCep.bairro}, ${enderecoViaCep.localidade}`;
+            const enderecoTexto = [local.bairro, local.cidade].filter(Boolean).join(', ');
+            const avisosPrecisao = {
+                bairro: 'Localizamos seu CEP pelo bairro, então a distância pode variar um pouco.',
+                cidade: 'Esse CEP é geral da cidade, sem rua específica. A distância é uma média — confirmamos o valor exato no WhatsApp.'
+            };
+            const avisoPrecisao = avisosPrecisao[local.precisao]
+                ? `<p class="aviso-taxa-a-parte">${avisosPrecisao[local.precisao]}</p>`
+                : '';
 
             boxResultado.innerHTML = `
-                <h4>Entrega estimada para ${enderecoTexto}</h4>
+                <h4>Entrega estimada para ${escaparHtml(enderecoTexto)}</h4>
                 <p><strong>Distância aproximada:</strong> ${distanciaEstimada.toFixed(1)} km</p>
                 <p><strong>Tempo estimado:</strong> ~${tempoEstimadoMin} min após o despacho</p>
-                <p><strong>Taxa de entrega (estimada):</strong> ${formatarReais(taxaEstimada)}</p>
+                <p><strong>Taxa de entrega:</strong> ${formatarReais(taxaEstimada)}</p>
                 <p><strong>Pedido Mínimo:</strong> ${formatarReais(PEDIDO_MINIMO_ENTREGA)}</p>
                 <p><strong>Prazo Estimado:</strong> ${prazo}</p>
-                <p class="aviso-taxa-a-parte">Valor estimado com base em app de motoboy (Uber Flash). O valor final é confirmado no momento do pedido e cobrado à parte do pedido mínimo.</p>
+                ${avisoPrecisao}
+                <p class="aviso-taxa-a-parte">Taxa fixa de ${formatarReais(TAXA_RAIO_BASE)} até ${RAIO_BASE_KM} km, mais ${formatarReais(VALOR_POR_KM_EXCEDENTE)} por km adicional. Cobrada à parte do pedido mínimo.</p>
             `;
             boxResultado.classList.remove('hidden');
             limparStatusCep();
 
             const mensagem =
                 `Olá! Estou no site e gostaria de fazer um pedido para entrega em ${enderecoTexto} ` +
-                `(CEP: ${cepFormatado}). Taxa de entrega estimada: ${formatarReais(taxaEstimada)} ` +
+                `(CEP: ${cepFormatado}). Taxa de entrega: ${formatarReais(taxaEstimada)} ` +
                 `(aprox. ${distanciaEstimada.toFixed(1)} km).`;
             abrirWhatsapp(mensagem);
         } catch (erro) {
